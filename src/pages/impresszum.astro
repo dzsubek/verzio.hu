@@ -1,0 +1,15 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { brand } from '../content/site';
+---
+
+<Legal title="Impresszum" description={`A(z) ${brand.name} impresszuma.`}>
+  <p class="sample-tag">TODO: valós cégadatok</p>
+  <p>Üzemeltető: {brand.legalName}</p>
+  <p>Székhely: TODO</p>
+  <p>Cégjegyzékszám: TODO</p>
+  <p>Adószám: TODO</p>
+  <p>E-mail: <a href={`mailto:${brand.email}`}>{brand.email}</a></p>
+  <p>Telefon: <a href={brand.phoneHref}>{brand.phone}</a></p>
+  <p>Tárhelyszolgáltató: TODO (név, cím, e-mail)</p>
+</Legal>

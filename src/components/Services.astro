@@ -1,0 +1,502 @@
+---
+import { services, cta } from '../content/site';
+import Icon from './Icon.astro';
+import Button from './Button.astro';
+
+const [web, software, it] = services.items;
+const { mock } = services;
+---
+
+<section class="services" id={services.id} aria-labelledby="szolg-cim">
+  <div class="container">
+    <header class="services__head">
+      <h2 id="szolg-cim" class="services__title" data-split>
+        {services.title[0]} <span class="accent">{services.title[1]}</span>{' '}{services.title[2]}
+      </h2>
+      <p class="services__sub" data-reveal>{services.sub}</p>
+    </header>
+
+    <div class="bento">
+      <!-- Web: large card with browser preview -->
+      <article class="card card--web" data-reveal>
+        <div class="card__copy">
+          <h3>{web.title}</h3>
+          <p>{web.text}</p>
+          <ul role="list" class="points">
+            {
+              web.points.map((p) => (
+                <li>
+                  <Icon name="check" class="points__icon" />
+                  {p}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="browser" aria-hidden="true" data-parallax="-6">
+          <div class="browser__bar">
+            <span class="browser__dots"><i></i><i></i><i></i></span>
+            <span class="browser__url">{mock.webUrl}</span>
+          </div>
+          <div class="browser__page">
+            <div class="site-nav">
+              <span class="site-nav__logo"></span>
+              <span class="site-nav__links"><i></i><i></i><i></i></span>
+            </div>
+            <p class="site-title">{mock.webHeadline}</p>
+            <span class="site-btn">Időpontot kérek</span>
+            <div class="site-tiles"><i></i><i></i><i></i></div>
+          </div>
+          <dl class="vitals">
+            {
+              mock.webVitals.map((v) => (
+                <div>
+                  <dt>{v.label}</dt>
+                  <dd>{v.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </article>
+
+      <!-- Software: code preview -->
+      <article class="card card--software" data-reveal>
+        <div class="card__copy">
+          <h3>{software.title}</h3>
+          <p>{software.text}</p>
+          <ul role="list" class="points">
+            {
+              software.points.map((p) => (
+                <li>
+                  <Icon name="check" class="points__icon" />
+                  {p}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <pre class="code mono" aria-hidden="true"><code><span class="c">// megrendelés → számla, automatikusan</span>
+<span class="k">async function</span> <span class="f">szinkron</span>(rendeles) {'{'}
+  <span class="k">const</span> vevo = <span class="k">await</span> crm.<span class="f">vevo</span>(rendeles.email);
+  <span class="k">const</span> szamla = <span class="k">await</span> szamlazo.<span class="f">kiallit</span>({'{'}
+    vevo, tetelek: rendeles.tetelek,
+  {'}'});
+  <span class="k">return</span> <span class="f">ertesit</span>(vevo, szamla);
+{'}'}</code></pre>
+      </article>
+
+      <!-- IT: wide strip with live status -->
+      <article class="card card--it" data-reveal>
+        <div class="card__copy">
+          <h3>{it.title}</h3>
+          <p>{it.text}</p>
+          <ul role="list" class="points points--row">
+            {
+              it.points.map((p) => (
+                <li>
+                  <Icon name="check" class="points__icon" />
+                  {p}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="status" aria-hidden="true">
+          <p class="status__title">
+            <span class="live"></span>
+            {mock.statusTitle}
+          </p>
+          <ul role="list">
+            {
+              mock.statusRows.map((r, i) => (
+                <li style={`--i:${i}`}>
+                  <span>{r.label}</span>
+                  <span class="status__state mono">{r.state}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </article>
+    </div>
+
+    <div class="services__cta" data-reveal>
+      <Button href={cta.href}>{cta.label}</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .services {
+    padding-block: var(--sp-9) var(--sp-8);
+  }
+
+  .services__head {
+    display: grid;
+    justify-items: center;
+    gap: var(--sp-4);
+    text-align: center;
+    margin-bottom: var(--sp-8);
+  }
+
+  .services__title {
+    font-size: var(--fs-2xl);
+    line-height: 1.02;
+    color: var(--c-panel-fg);
+  }
+
+  .services__sub {
+    max-width: var(--maxw-text);
+    font-size: var(--fs-md);
+    color: var(--c-panel-muted);
+  }
+
+  /* Bento: 3 items -> 3 cells (2+1 then full-width strip). */
+  .bento {
+    display: grid;
+    gap: var(--sp-4);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 60rem) {
+    .bento {
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .card--web {
+      grid-column: span 7;
+    }
+    .card--software {
+      grid-column: span 5;
+    }
+    .card--it {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    gap: var(--sp-6);
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border-radius: var(--r-card);
+    background: var(--c-surface);
+    color: var(--c-fg);
+    box-shadow: var(--shadow-on-light);
+  }
+
+  .card h3 {
+    font-size: var(--fs-lg);
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: var(--sp-2);
+  }
+
+  .card__copy > p {
+    color: var(--c-fg-muted);
+    max-width: 34ch;
+  }
+
+  .points {
+    display: grid;
+    gap: var(--sp-2);
+    margin-top: var(--sp-5);
+    font-size: var(--fs-sm);
+    color: var(--c-fg-soft);
+  }
+
+  .points li {
+    display: flex;
+    gap: var(--sp-2);
+    align-items: baseline;
+  }
+
+  :global(.points__icon) {
+    flex: none;
+    color: var(--c-accent);
+    transform: translateY(0.15em);
+  }
+
+  /* Web card: mint glow bottom-right + browser */
+  .card--web {
+    background:
+      radial-gradient(60% 70% at 100% 100%, rgb(46 230 166 / 0.22), transparent 70%),
+      var(--c-surface);
+  }
+
+  @media (min-width: 40rem) {
+    .card--web {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+      align-items: center;
+    }
+  }
+
+  .browser {
+    position: relative;
+    border-radius: var(--r-control);
+    background: var(--c-surface-3);
+    border: 1px solid var(--c-line-strong);
+    box-shadow: var(--shadow-float);
+    font-size: 0.75rem;
+  }
+
+  .browser__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: 0.55rem 0.75rem;
+    border-bottom: 1px solid var(--c-line);
+  }
+
+  .browser__dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .browser__dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.18);
+  }
+
+  .browser__url {
+    flex: 1;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--r-pill);
+    background: rgb(255 255 255 / 0.06);
+    color: var(--c-fg-muted);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+  }
+
+  .browser__page {
+    display: grid;
+    gap: 0.7rem;
+    padding: 1rem 1rem 3.75rem;
+    background: linear-gradient(180deg, #f6f7f5, #ecefec);
+    color: #101311;
+    border-radius: 0 0 var(--r-control) var(--r-control);
+  }
+
+  .site-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .site-nav__logo {
+    width: 2.2rem;
+    height: 0.55rem;
+    border-radius: 3px;
+    background: #101311;
+  }
+
+  .site-nav__links {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .site-nav__links i {
+    width: 1.4rem;
+    height: 0.35rem;
+    border-radius: 3px;
+    background: rgb(16 19 17 / 0.2);
+  }
+
+  .site-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    max-width: 14ch;
+    hyphens: manual;
+  }
+
+  .site-btn {
+    justify-self: start;
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    background: #101311;
+    color: #fff;
+    font-size: 0.6875rem;
+  }
+
+  .site-tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
+  }
+
+  .site-tiles i {
+    aspect-ratio: 4 / 3;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #d7ddd8, #c3ccc6);
+  }
+
+  .site-tiles i:nth-child(2) {
+    background: linear-gradient(135deg, #b9eedb, #8fdcbf);
+  }
+
+  .vitals {
+    position: absolute;
+    left: 50%;
+    bottom: -0.5rem;
+    translate: -50% 0;
+    display: flex;
+    gap: 1px;
+    padding: 0.25rem;
+    border-radius: var(--r-control);
+    background: rgb(13 15 18 / 0.86);
+    border: 1px solid var(--c-line-strong);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-float);
+    white-space: nowrap;
+  }
+
+  .vitals div {
+    padding: 0.35rem 0.7rem;
+  }
+
+  .vitals dt {
+    font-size: 0.625rem;
+    color: var(--c-fg-muted);
+  }
+
+  .vitals dd {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--c-accent);
+  }
+
+  /* Software card: dot grid texture + code */
+  .card--software {
+    background:
+      radial-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1.2px) 0 0 / 18px 18px,
+      linear-gradient(180deg, var(--c-surface-2), var(--c-surface));
+    align-content: space-between;
+  }
+
+  .code {
+    margin: 0 calc(-1 * clamp(1.5rem, 1rem + 2vw, 2.5rem)) calc(-1 * clamp(1.5rem, 1rem + 2vw, 2.5rem)) 0;
+    padding: 1rem 1.25rem;
+    border-top-left-radius: var(--r-control);
+    border: 1px solid var(--c-line-strong);
+    border-right: 0;
+    border-bottom: 0;
+    background: rgb(0 0 0 / 0.55);
+    font-size: 0.75rem;
+    line-height: 1.7;
+    color: var(--c-fg-soft);
+    overflow: hidden;
+    white-space: pre;
+    mask-image: linear-gradient(90deg, #000 80%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, #000 80%, transparent);
+  }
+
+  .code .c {
+    color: var(--c-fg-dim);
+  }
+  .code .k {
+    color: var(--c-accent);
+  }
+  .code .f {
+    color: #fff;
+  }
+
+  /* IT strip */
+  .card--it {
+    background:
+      linear-gradient(90deg, var(--c-surface) 40%, transparent),
+      radial-gradient(80% 140% at 100% 50%, rgb(46 230 166 / 0.14), transparent 70%),
+      var(--c-surface);
+  }
+
+  @media (min-width: 48rem) {
+    .card--it {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      align-items: center;
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .points--row {
+      grid-template-columns: repeat(3, auto);
+      justify-content: start;
+      column-gap: var(--sp-5);
+    }
+  }
+
+  .status {
+    padding: var(--sp-4);
+    border-radius: var(--r-control);
+    background: rgb(255 255 255 / 0.03);
+    border: 1px solid var(--c-line-strong);
+    font-size: var(--fs-sm);
+  }
+
+  .status__title {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-3);
+    color: var(--c-fg-muted);
+    font-size: var(--fs-xs);
+  }
+
+  .live {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--c-accent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .live::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: var(--c-accent);
+      animation: ping 2.4s var(--ease-out) infinite;
+    }
+  }
+
+  @keyframes ping {
+    0% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    80%,
+    100% {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+
+  .status li {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    padding-block: 0.55rem;
+  }
+
+  .status li + li {
+    border-top: 1px solid var(--c-line);
+  }
+
+  .status__state {
+    color: var(--c-accent);
+    font-size: var(--fs-xs);
+  }
+
+  .services__cta {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--sp-7);
+  }
+</style>

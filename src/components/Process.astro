@@ -1,0 +1,225 @@
+---
+import { Picture } from 'astro:assets';
+import { process } from '../content/site';
+import ProcessCard from './ProcessCard.astro';
+import photo from '../assets/img/folyamat.jpg';
+---
+
+<section class="process" id={process.id} aria-labelledby="folyamat-cim" data-process>
+  <div class="container">
+    <h2 id="folyamat-cim" class="process__title" data-split>
+      <span class="accent">{process.title[0]}</span>{' '}{`${process.title[1]} ${process.title[2]}`}
+    </h2>
+
+    <div class="process__grid">
+      <ol role="list" class="steps">
+        {
+          process.steps.map((s, i) => (
+            <li class:list={['step', { 'is-active': i === 0 }]} data-step={i}>
+              <p class="step__name">{s.name}</p>
+              <h3 class="step__title">{s.title}</h3>
+              <p class="step__text">{s.text}</p>
+              <div class="step__mock">
+                <ProcessCard step={s.key as 'discover'} />
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class="stage" aria-hidden="true">
+        <div class="stage__photo" data-parallax="-4">
+          <Picture
+            src={photo}
+            alt=""
+            widths={[480, 720, 960]}
+            sizes="(min-width: 60rem) 30vw, 1px"
+            formats={['avif', 'webp']}
+            loading="lazy"
+          />
+        </div>
+        <div class="stage__cards">
+          {
+            process.steps.map((s, i) => (
+              <div class:list={['stage__card', { 'is-active': i === 0 }]} data-stage-card={i}>
+                <ProcessCard step={s.key as 'discover'} />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Step activation is state, not decoration: it runs with or without reduced motion.
+  const root = document.querySelector<HTMLElement>('[data-process]');
+  if (root) {
+    const steps = [...root.querySelectorAll<HTMLElement>('[data-step]')];
+    const cards = [...root.querySelectorAll<HTMLElement>('[data-stage-card]')];
+    const setActive = (idx: number) => {
+      steps.forEach((el, i) => el.classList.toggle('is-active', i === idx));
+      cards.forEach((el, i) => el.classList.toggle('is-active', i === idx));
+    };
+    // Active = the last step whose top has passed the viewport centre. Recomputed whenever any
+    // step crosses a visibility threshold, so fast jumps (anchor links, End key) stay correct.
+    const update = () => {
+      const mid = window.innerHeight * 0.5;
+      let idx = 0;
+      steps.forEach((el, i) => {
+        if (el.getBoundingClientRect().top < mid) idx = i;
+      });
+      setActive(idx);
+    };
+    const io = new IntersectionObserver(update, {
+      threshold: Array.from({ length: 21 }, (_, i) => i / 20),
+    });
+    steps.forEach((el) => io.observe(el));
+  }
+</script>
+
+<style>
+  .process {
+    padding-block: var(--sp-8) var(--sp-9);
+  }
+
+  .process__title {
+    font-size: var(--fs-2xl);
+    line-height: 1.02;
+    text-align: center;
+    max-width: 16ch;
+    margin-inline: auto;
+    margin-bottom: var(--sp-8);
+  }
+
+  .process__grid {
+    display: grid;
+    gap: var(--sp-7);
+  }
+
+  .steps {
+    display: grid;
+    gap: var(--sp-7);
+  }
+
+  .step__name {
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--c-accent-ink);
+    margin-bottom: var(--sp-2);
+  }
+
+  .step__title {
+    font-size: var(--fs-xl);
+    line-height: 1.08;
+    max-width: 18ch;
+    transition: color var(--dur-slow) var(--ease-out);
+  }
+
+  .step__text {
+    margin-top: var(--sp-3);
+    max-width: 40ch;
+    color: var(--c-panel-muted);
+  }
+
+  .step__mock {
+    margin-top: var(--sp-5);
+  }
+
+  .stage {
+    display: none;
+  }
+
+  @media (min-width: 60rem) {
+    .process__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--sp-8);
+    }
+
+    .steps {
+      gap: 0;
+      padding-block: 18vh 30vh;
+    }
+
+    .step {
+      min-height: 52vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .step__mock {
+      display: none;
+    }
+
+    .step:not(.is-active) .step__title {
+      color: #8a8a85; /* 3.4:1 on white: AA for large text */
+    }
+
+    .step__name,
+    .step__text {
+      transition: opacity var(--dur-slow) var(--ease-out);
+    }
+
+    .step:not(.is-active) .step__name,
+    .step:not(.is-active) .step__text {
+      opacity: 0.55;
+    }
+
+    .stage {
+      display: block;
+      position: sticky;
+      top: calc(var(--nav-h) + 6vh);
+      height: min(78vh, 46rem);
+      align-self: start;
+    }
+
+    .stage__photo {
+      position: absolute;
+      inset: 0 12% 18% 0;
+      border-radius: var(--r-card);
+      overflow: hidden;
+      background: #e9ebe8;
+    }
+
+    .stage__photo :global(img) {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .stage__cards {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 22rem;
+      display: grid;
+    }
+
+    .stage__card {
+      grid-area: 1 / 1;
+      align-self: end;
+      opacity: 0;
+      transform: translateY(1.25rem) scale(0.97);
+      transition:
+        opacity var(--dur-slow) var(--ease-out),
+        transform var(--dur-slow) var(--ease-out);
+    }
+
+    .stage__card.is-active {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* No JS: every step stays fully readable. */
+  :global(html:not(.js)) .step .step__title {
+    color: inherit !important;
+  }
+
+  :global(html:not(.js)) .step .step__name,
+  :global(html:not(.js)) .step .step__text {
+    opacity: 1 !important;
+  }
+</style>

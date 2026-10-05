@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Logo from '../components/Logo.astro';
+import Button from '../components/Button.astro';
+import { brand, notFound } from '../content/site';
+---
+
+<Base title={`${notFound.title} | ${brand.name}`} description={notFound.text} noindex>
+  <main id="tartalom" class="nf container">
+    <a href="/" class="nf__logo" aria-label={`${brand.name} főoldal`}><Logo /></a>
+    <p class="nf__code mono" aria-hidden="true">404</p>
+    <h1>{notFound.title}</h1>
+    <p class="nf__text">{notFound.text}</p>
+    <Button href="/">{notFound.back}</Button>
+  </main>
+</Base>
+
+<style>
+  .nf {
+    min-height: 100dvh;
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: var(--sp-5);
+  }
+
+  .nf__logo {
+    position: absolute;
+    top: var(--sp-5);
+  }
+
+  .nf__code {
+    font-size: var(--fs-hero);
+    line-height: 1;
+    color: var(--c-accent);
+    letter-spacing: -0.06em;
+  }
+
+  h1 {
+    font-size: var(--fs-xl);
+  }
+
+  .nf__text {
+    color: var(--c-fg-muted);
+    max-width: 40ch;
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+// Phosphor icons (one family, project-wide). Decorative by default.
+import code from '@phosphor-icons/core/assets/light/code-light.svg?raw';
+import sparkle from '@phosphor-icons/core/assets/fill/sparkle-fill.svg?raw';
+import arrowUpRight from '@phosphor-icons/core/assets/regular/arrow-up-right.svg?raw';
+import arrowRight from '@phosphor-icons/core/assets/regular/arrow-right.svg?raw';
+import check from '@phosphor-icons/core/assets/regular/check.svg?raw';
+import dots from '@phosphor-icons/core/assets/regular/dots-three.svg?raw';
+import clock from '@phosphor-icons/core/assets/regular/clock.svg?raw';
+import list from '@phosphor-icons/core/assets/regular/list.svg?raw';
+import x from '@phosphor-icons/core/assets/regular/x.svg?raw';
+import phone from '@phosphor-icons/core/assets/regular/phone.svg?raw';
+import envelope from '@phosphor-icons/core/assets/regular/envelope-simple.svg?raw';
+import lightning from '@phosphor-icons/core/assets/regular/lightning.svg?raw';
+import gitCommit from '@phosphor-icons/core/assets/regular/git-commit.svg?raw';
+
+const icons = {
+  code,
+  sparkle,
+  arrowUpRight,
+  arrowRight,
+  check,
+  dots,
+  clock,
+  list,
+  x,
+  phone,
+  envelope,
+  lightning,
+  gitCommit,
+} as const;
+
+export type IconName = keyof typeof icons;
+
+interface Props {
+  name: IconName;
+  size?: string;
+  class?: string;
+  label?: string;
+}
+
+const { name, size = '1em', class: className = '', label } = Astro.props;
+const a11y = label ? `role="img" aria-label="${label}"` : 'aria-hidden="true" focusable="false"';
+const svg = icons[name].replace(
+  '<svg ',
+  `<svg width="${size}" height="${size}" class="icon ${className}" ${a11y} `,
+);
+---
+
+<Fragment set:html={svg} />

@@ -1,0 +1,30 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { brand } from '../content/site';
+---
+
+<Legal title="Adatkezelési tájékoztató" description={`A(z) ${brand.name} adatkezelési tájékoztatója.`}>
+  <p class="sample-tag">TODO: végleges, jogász által jóváhagyott szöveg</p>
+  <p>
+    Ez az oldal helyőrző. A végleges adatkezelési tájékoztatónak (GDPR, Infotv.) tartalmaznia kell
+    legalább az alábbiakat.
+  </p>
+  <h2>Az adatkezelő</h2>
+  <p>TODO: cégnév, székhely, cégjegyzékszám, adószám, e-mail-cím: {brand.email}.</p>
+  <h2>A kezelt adatok és a kezelés célja</h2>
+  <p>
+    TODO: a kapcsolatfelvételi űrlapon megadott név, e-mail-cím, telefonszám és üzenet, az
+    ajánlatkérés megválaszolása céljából.
+  </p>
+  <h2>Jogalap és megőrzési idő</h2>
+  <p>TODO: hozzájárulás (GDPR 6. cikk (1) a)), megőrzési idő.</p>
+  <h2>Adatfeldolgozók</h2>
+  <p>
+    Az ajánlatkérő űrlap tartalmát a FormSubmit szolgáltatás (Devro LABS) továbbítja e-mailben, és legfeljebb 30
+    napig tárolja. TODO: tárhelyszolgáltató és e-mail-szolgáltató, adatfeldolgozói szerződések, jogi felülvizsgálat.
+  </p>
+  <h2>Sütik</h2>
+  <p>Az oldal nem használ sütiket, és nem tölt be külső követőkódot.</p>
+  <h2>Az érintett jogai és jogorvoslat</h2>
+  <p>TODO: hozzáférés, helyesbítés, törlés, korlátozás, tiltakozás, NAIH elérhetősége.</p>
+</Legal>

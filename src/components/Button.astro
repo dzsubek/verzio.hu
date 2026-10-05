@@ -1,0 +1,122 @@
+---
+// One primary CTA style site-wide. `ghost` is the hero variant of the same CTA (same label & target).
+import Icon from './Icon.astro';
+
+interface Props {
+  href: string;
+  variant?: 'solid' | 'ghost';
+  size?: 'sm' | 'md';
+  class?: string;
+  magnetic?: boolean;
+}
+
+const { href, variant = 'solid', size = 'md', class: className = '', magnetic = false } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['btn', `btn--${variant}`, `btn--${size}`, className]}
+  data-magnetic={magnetic ? '' : undefined}
+>
+  <span class="btn__label"><slot /></span>
+  <Icon name="arrowUpRight" class="btn__icon" />
+</a>
+
+<style>
+  .btn {
+    --btn-pad-x: 1.375rem;
+    --btn-h: 3.25rem;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: var(--btn-h);
+    padding-inline: var(--btn-pad-x);
+    border-radius: var(--r-control);
+    font-weight: 500;
+    font-size: var(--fs-base);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    isolation: isolate;
+    transition:
+      background-color var(--dur) var(--ease-out),
+      border-color var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out);
+  }
+
+  .btn--sm {
+    --btn-pad-x: 1rem;
+    --btn-h: 2.5rem;
+    font-size: var(--fs-sm);
+  }
+
+  .btn:active .btn__label,
+  .btn:active :global(.btn__icon) {
+    transform: translateY(1px);
+  }
+
+  :global(.btn__icon) {
+    transition: transform var(--dur) var(--ease-out);
+  }
+
+  .btn:hover :global(.btn__icon) {
+    transform: translate(2px, -2px);
+  }
+
+  .btn--solid {
+    background: var(--c-accent);
+    color: var(--c-accent-on);
+  }
+
+  .btn--solid:hover {
+    box-shadow: 0 0 0 4px var(--c-accent-soft), 0 10px 40px -8px var(--c-accent-glow);
+  }
+
+  /* Hero ghost: thin border + breathing mint glow, as in the reference. */
+  .btn--ghost {
+    --btn-h: 3.75rem;
+    --btn-pad-x: 1.75rem;
+    font-size: var(--fs-md);
+    background: rgb(0 0 0 / 0.6);
+    color: var(--c-fg);
+    border: 1px solid var(--c-line-strong);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.04) inset;
+  }
+
+  .btn--ghost::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    border-radius: inherit;
+    box-shadow: 0 12px 48px -6px var(--c-accent-glow);
+    opacity: 0.55;
+    transition: opacity var(--dur-slow) var(--ease-out);
+  }
+
+  .btn--ghost:hover {
+    border-color: rgb(46 230 166 / 0.6);
+  }
+
+  .btn--ghost:hover::before {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .btn--ghost::before {
+      animation: breathe 4.5s var(--ease-in-out) infinite;
+    }
+  }
+
+  @keyframes breathe {
+    0%,
+    100% {
+      opacity: 0.45;
+    }
+    50% {
+      opacity: 0.9;
+    }
+  }
+</style>

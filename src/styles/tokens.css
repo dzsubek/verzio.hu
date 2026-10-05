@@ -1,0 +1,96 @@
+/*
+  Design tokens: the only place raw colour / size / motion values live.
+  Components consume these custom properties, never raw hex or px.
+
+  Radius rule: panel = big sheet corners, card = content cards & media,
+  control = buttons & inputs, pill = chips & tags.
+*/
+:root {
+  /* Colour: dark theme (page) */
+  --c-bg: #000;
+  --c-fg: #f4f4f2;
+  --c-fg-soft: #c9c9c6;
+  --c-fg-muted: #8f8f8b;          /* 6.9:1 on #000 */
+  --c-fg-dim: #6c6c69;            /* 4.0:1 on #000, large text only */
+  --c-line: rgb(255 255 255 / 0.09);
+  --c-line-strong: rgb(255 255 255 / 0.18);
+  --c-surface: #0d0f12;
+  --c-surface-2: #14171c;
+  --c-surface-3: #1c2027;
+
+  /* Colour: light panel */
+  --c-panel: #fff;
+  --c-panel-fg: #0a0a0a;
+  --c-panel-muted: #5c5c58;       /* 6.6:1 on #fff */
+  --c-panel-dim: #b4b4af;
+  --c-panel-line: rgb(0 0 0 / 0.08);
+
+  /* Accent: one mint, two inks */
+  --c-accent: #2ee6a6;            /* on dark */
+  --c-accent-ink: #087a50;        /* on white, 5.3:1 */
+  --c-accent-on: #00140c;         /* text on mint buttons */
+  --c-accent-soft: rgb(46 230 166 / 0.14);
+  --c-accent-glow: rgb(46 230 166 / 0.45);
+  --c-danger: #ff7a7a;
+  --c-danger-ink: #b42318;
+
+  /* Type */
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-hand: 'Caveat', 'Segoe Print', cursive;
+
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.9375rem;
+  --fs-base: 1.0625rem;
+  --fs-md: clamp(1.125rem, 1.02rem + 0.45vw, 1.375rem);
+  --fs-lg: clamp(1.375rem, 1.15rem + 0.9vw, 1.875rem);
+  --fs-xl: clamp(1.875rem, 1.4rem + 2vw, 3.25rem);
+  --fs-2xl: clamp(2.375rem, 1.6rem + 3.4vw, 4.75rem);
+  --fs-hero: clamp(2.5rem, 0.9rem + 6.6vw, 7.5rem);
+
+  --lh-tight: 0.95;
+  --lh-snug: 1.12;
+  --lh-body: 1.6;
+  --tracking-hero: -0.055em;
+  --tracking-display: -0.04em;
+  --tracking-tight: -0.02em;
+
+  /* Space (fluid) */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  --sp-8: clamp(3.5rem, 2.5rem + 4vw, 6rem);
+  --sp-9: clamp(5rem, 3rem + 8vw, 10rem);
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+  --maxw: 82rem;
+  --maxw-text: 38rem;
+  --nav-h: 4.25rem;
+
+  /* Radius */
+  --r-panel: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+  --r-card: 1.25rem;
+  --r-control: 0.75rem;
+  --r-pill: 999px;
+
+  /* Elevation */
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 24px 60px -24px rgb(0 0 0 / 0.55);
+  --shadow-float: 0 1px 0 rgb(255 255 255 / 0.08) inset, 0 30px 80px -20px rgb(0 0 0 / 0.65);
+  --shadow-on-light: 0 30px 70px -30px rgb(10 20 16 / 0.45);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur: 320ms;
+  --dur-slow: 700ms;
+
+  /* Layers */
+  --z-panel: 2;
+  --z-nav: 50;
+  --z-menu: 60;
+  --z-skip: 100;
+}

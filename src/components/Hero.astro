@@ -1,0 +1,212 @@
+---
+import { hero, cta } from '../content/site';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+
+// Split each line into words and {icon} tokens so words never break mid-character.
+type Token = { type: 'word'; text: string } | { type: 'icon'; name: 'code' | 'sparkle' };
+const lines: Token[][] = hero.lines.map((line) =>
+  line
+    .split(' ')
+    .filter(Boolean)
+    .map((part) =>
+      part === '{code}' || part === '{spark}'
+        ? ({ type: 'icon', name: part === '{code}' ? 'code' : 'sparkle' } as const)
+        : ({ type: 'word', text: part } as const),
+    ),
+);
+
+// Keep hyphenated compounds (e.g. „IT-háttér”) on one line.
+const subParts = hero.sub.split(/(\S+-\S+)/);
+---
+
+<section class="hero" id="top" data-hero>
+  <div class="hero__inner container" data-hero-inner>
+    <h1 class="hero__title">
+      <span class="visually-hidden">{hero.label}</span>
+      <span aria-hidden="true" class="hero__visual" data-hero-title>
+        {
+          lines.map((tokens, li) => (
+            <span class={`hero__line hero__line--${li + 1}`} data-hero-line>
+              {tokens.map((t) =>
+                t.type === 'word' ? (
+                  <span class="hero__word" data-hero-word>
+                    {t.text}
+                  </span>
+                ) : (
+                  <span class={`hero__icon hero__icon--${t.name}`} data-hero-icon>
+                    <Icon name={t.name} size="100%" />
+                  </span>
+                ),
+              )}
+            </span>
+          ))
+        }
+      </span>
+    </h1>
+
+    <p class="hero__sub" data-hero-sub>
+      {subParts.map((part, i) => (i % 2 ? <span class="nowrap">{part}</span> : part))}
+    </p>
+
+    <div class="hero__cta" data-hero-cta>
+      <Button href={cta.href} variant="ghost" magnetic>{cta.label}</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: sticky;
+    top: 0;
+    min-height: 100dvh;
+    display: grid;
+    align-items: center;
+    padding-top: var(--nav-h);
+    padding-bottom: var(--sp-8);
+    overflow: hidden;
+    background: var(--c-bg);
+  }
+
+  .hero__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--sp-6);
+    transform-origin: 50% 40%;
+  }
+
+  .hero__title {
+    font-size: var(--fs-hero);
+    font-weight: 500;
+    line-height: var(--lh-tight);
+    letter-spacing: var(--tracking-hero);
+    text-wrap: initial;
+  }
+
+  .hero__visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero__line {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    column-gap: 0.24em;
+    padding-bottom: 0.06em; /* descender room for g, j, p */
+  }
+
+  /* Gradient per line (no-JS look). motion.ts swaps this for per-character colour. */
+  .hero__word {
+    white-space: nowrap;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .hero__line--1 .hero__word {
+    background-image: linear-gradient(90deg, var(--c-fg-dim), var(--c-fg-muted));
+  }
+
+  .hero__line--2 .hero__word {
+    background-image: linear-gradient(90deg, var(--c-fg-muted), var(--c-fg-soft));
+  }
+
+  .hero__line--3 .hero__word {
+    background-image: linear-gradient(90deg, var(--c-fg-soft), var(--c-fg));
+  }
+
+  :global(.chars-split) .hero__line .hero__word {
+    background-image: none;
+    background-clip: border-box;
+    -webkit-background-clip: border-box;
+    color: inherit;
+  }
+
+  :global(.hero__char) {
+    display: inline-block;
+    will-change: opacity, filter;
+  }
+
+  .hero__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 0.78em;
+    height: 0.78em;
+    color: var(--c-accent);
+    flex: none;
+  }
+
+  .hero__icon--code {
+    filter: drop-shadow(0 0 0.08em rgb(46 230 166 / 0.7)) drop-shadow(0 0 0.35em rgb(46 230 166 / 0.35));
+  }
+
+  .hero__icon--sparkle {
+    width: 0.62em;
+    height: 0.62em;
+    position: relative;
+    filter: drop-shadow(0 0 0.06em #c7ffe9) drop-shadow(0 0 0.3em var(--c-accent-glow));
+  }
+
+  .hero__icon--sparkle::before {
+    content: '';
+    position: absolute;
+    inset: -60%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(46 230 166 / 0.28), transparent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__icon--sparkle :global(svg) {
+      animation: twinkle 3.6s var(--ease-in-out) infinite;
+    }
+  }
+
+  @keyframes twinkle {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(0.86) rotate(18deg);
+    }
+  }
+
+  .hero__sub {
+    max-width: 34rem;
+    font-size: var(--fs-md);
+    line-height: 1.45;
+    color: var(--c-fg-muted);
+    hyphens: manual;
+  }
+
+  .nowrap {
+    white-space: nowrap;
+  }
+
+  .hero__cta {
+    margin-top: var(--sp-2);
+  }
+
+  /* Hide only while the intro is about to play. */
+  :global(.motion-ok:not(.motion-ready):not(.motion-failed)) [data-hero-title],
+  :global(.motion-ok:not(.motion-ready):not(.motion-failed)) [data-hero-sub],
+  :global(.motion-ok:not(.motion-ready):not(.motion-failed)) [data-hero-cta] {
+    opacity: 0;
+  }
+
+  @media (max-width: 40rem) {
+    .hero {
+      align-items: end;
+      padding-bottom: var(--sp-9);
+    }
+    .hero__line {
+      column-gap: 0.2em;
+    }
+  }
+</style>

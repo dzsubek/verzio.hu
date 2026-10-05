@@ -1,0 +1,12 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { brand } from '../content/site';
+---
+
+<Legal title="Általános szerződési feltételek" description={`A(z) ${brand.name} általános szerződési feltételei.`}>
+  <p class="sample-tag">TODO: végleges, jogász által jóváhagyott szöveg</p>
+  <p>
+    Ez az oldal helyőrző. Az ÁSZF végleges szövege a szolgáltatási modell (projektalapú fejlesztés,
+    havi üzemeltetési díj) véglegesítése után készül el.
+  </p>
+</Legal>

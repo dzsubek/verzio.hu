@@ -1,0 +1,70 @@
+---
+import Base from './Base.astro';
+import Logo from '../components/Logo.astro';
+import Footer from '../components/Footer.astro';
+import { brand } from '../content/site';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<Base title={`${title} | ${brand.name}`} description={description}>
+  <header class="lhead container">
+    <a href="/" aria-label={`${brand.name} főoldal`}><Logo /></a>
+  </header>
+  <main id="tartalom" class="legal container">
+    <h1>{title}</h1>
+    <div class="legal__body">
+      <slot />
+    </div>
+    <p class="legal__back"><a href="/">Vissza a főoldalra</a></p>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .lhead {
+    display: flex;
+    align-items: center;
+    height: var(--nav-h);
+    border-bottom: 1px solid var(--c-line);
+  }
+
+  .legal {
+    max-width: 48rem;
+    padding-block: var(--sp-8);
+  }
+
+  h1 {
+    font-size: var(--fs-xl);
+    margin-bottom: var(--sp-6);
+  }
+
+  .legal__body {
+    display: grid;
+    gap: var(--sp-4);
+    color: var(--c-fg-soft);
+  }
+
+  .legal__body :global(h2) {
+    font-size: var(--fs-lg);
+    color: var(--c-fg);
+    margin-top: var(--sp-5);
+  }
+
+  .legal__back {
+    margin-top: var(--sp-7);
+  }
+
+  .legal__back a,
+  .legal__body :global(a) {
+    color: var(--c-fg);
+    text-decoration: underline;
+    text-decoration-color: var(--c-accent);
+    text-underline-offset: 3px;
+  }
+</style>

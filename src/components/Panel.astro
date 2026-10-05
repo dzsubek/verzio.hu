@@ -1,0 +1,19 @@
+---
+// The white sheet that rises over the sticky black hero (reference: frames 4-12).
+---
+
+<div class="panel on-light" data-panel>
+  <slot />
+</div>
+
+<style>
+  .panel {
+    position: relative;
+    z-index: var(--z-panel);
+    background: var(--c-panel);
+    color: var(--c-panel-fg);
+    border-radius: var(--r-panel);
+    color-scheme: light;
+    box-shadow: 0 -30px 80px -20px rgb(46 230 166 / 0.12);
+  }
+</style>

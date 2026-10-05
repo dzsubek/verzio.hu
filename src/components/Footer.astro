@@ -1,0 +1,121 @@
+---
+import { brand, footer, legal, nav } from '../content/site';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <Logo class="footer__logo" />
+        <p>{footer.line}</p>
+      </div>
+      <nav aria-label="Lábléc navigáció">
+        <ul role="list" class="footer__nav">
+          {
+            nav.map((n) => (
+              <li>
+                <a href={n.href}>{n.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <div class="footer__contact">
+        <a href={`mailto:${brand.email}`}>{brand.email}</a>
+        <a href={brand.phoneHref}>{brand.phone}</a>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p>© {year} {brand.name}. {footer.rights}</p>
+      <ul role="list" class="footer__legal">
+        {
+          legal.map((l) => (
+            <li>
+              <a href={l.href}>{l.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+      <a href="#top" class="footer__top-link" aria-label={footer.backToTop}>
+        <Icon name="arrowUpRight" size="1.25rem" class="footer__up" />
+      </a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: var(--sp-8) var(--sp-6);
+    border-top: 1px solid var(--c-line);
+    font-size: var(--fs-sm);
+    color: var(--c-fg-muted);
+  }
+
+  .footer__top {
+    display: grid;
+    gap: var(--sp-6);
+    padding-bottom: var(--sp-7);
+  }
+
+  @media (min-width: 48rem) {
+    .footer__top {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+  }
+
+  :global(.footer__logo) {
+    font-size: 2rem !important;
+    color: var(--c-fg);
+    margin-bottom: var(--sp-3);
+  }
+
+  .footer__nav,
+  .footer__contact {
+    display: grid;
+    gap: var(--sp-2);
+    align-content: start;
+  }
+
+  .footer a {
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .footer a:hover {
+    color: var(--c-fg);
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-3) var(--sp-6);
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--c-line);
+  }
+
+  .footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-5);
+  }
+
+  .footer__top-link {
+    margin-left: auto;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--r-control);
+    border: 1px solid var(--c-line-strong);
+    color: var(--c-fg);
+  }
+
+  :global(.footer__up) {
+    transform: rotate(-45deg);
+  }
+</style>

@@ -1,0 +1,294 @@
+---
+// Decorative floating card that illustrates each process step (reference: the dark profile card, frame 12).
+import { process } from '../content/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  step: 'discover' | 'design' | 'build' | 'run';
+  class?: string;
+}
+
+const { step, class: className = '' } = Astro.props;
+const { mock } = process;
+const meta = process.steps.find((s) => s.key === step)!;
+// Deterministic "uptime" bars: 30 days, two short blips.
+const bars = Array.from({ length: 30 }, (_, i) => (i === 11 ? 0.55 : i === 23 ? 0.8 : 1));
+---
+
+<div class:list={['pcard', `pcard--${step}`, className]} aria-hidden="true">
+  <div class="pcard__head">
+    <span class="pcard__name">{meta.name}</span>
+    <Icon name="dots" size="1.1rem" />
+  </div>
+
+  {
+    step === 'discover' && (
+      <ul role="list" class="brief">
+        {mock.brief.map((item, i) => (
+          <li class:list={{ done: i < 3 }}>
+            <span class="brief__box">{i < 3 && <Icon name="check" size="0.75rem" />}</span>
+            {item}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    step === 'design' && (
+      <div class="wire">
+        <div class="wire__bar" />
+        <div class="wire__hero">
+          <i />
+          <i />
+          <b>Kattintható terv</b>
+        </div>
+        <div class="wire__grid">
+          <i />
+          <i />
+          <i />
+        </div>
+        <span class="wire__cursor" />
+      </div>
+    )
+  }
+
+  {
+    step === 'build' && (
+      <ul role="list" class="commits mono">
+        {mock.commits.map((c) => (
+          <li>
+            <Icon name="gitCommit" size="1rem" />
+            <span class="commits__hash">{c.hash}</span>
+            <span class="commits__msg">{c.msg}</span>
+          </li>
+        ))}
+        <li class="commits__deploy">
+          <Icon name="lightning" size="1rem" />
+          Élesítve
+        </li>
+      </ul>
+    )
+  }
+
+  {
+    step === 'run' && (
+      <div class="uptime">
+        <p class="uptime__label">{mock.uptimeLabel}</p>
+        <div class="uptime__bars">
+          {bars.map((h) => (
+            <i style={`--h:${h}`} class:list={{ warn: h < 1 }} />
+          ))}
+        </div>
+        <p class="uptime__ok">
+          <span class="live" />
+          Minden rendszer működik
+        </p>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .pcard {
+    width: min(100%, 22rem);
+    padding: var(--sp-5);
+    border-radius: var(--r-card);
+    background: linear-gradient(180deg, #1d222b, #12151b);
+    border: 1px solid var(--c-line-strong);
+    box-shadow: var(--shadow-float), 0 40px 80px -30px rgb(10 20 16 / 0.5);
+    color: var(--c-fg);
+    font-size: var(--fs-sm);
+  }
+
+  .pcard__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--sp-4);
+    margin-bottom: var(--sp-4);
+    border-bottom: 1px solid var(--c-line);
+    color: var(--c-fg-muted);
+  }
+
+  .pcard__name {
+    color: var(--c-fg);
+    font-weight: 500;
+  }
+
+  /* discover */
+  .brief {
+    display: grid;
+    gap: var(--sp-3);
+  }
+
+  .brief li {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    color: var(--c-fg-muted);
+  }
+
+  .brief li.done {
+    color: var(--c-fg);
+  }
+
+  .brief__box {
+    display: grid;
+    place-items: center;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 5px;
+    border: 1px solid var(--c-line-strong);
+  }
+
+  .done .brief__box {
+    background: var(--c-accent);
+    border-color: var(--c-accent);
+    color: var(--c-accent-on);
+  }
+
+  /* design */
+  .wire {
+    position: relative;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .wire__bar {
+    height: 0.5rem;
+    width: 40%;
+    border-radius: 4px;
+    background: rgb(255 255 255 / 0.14);
+  }
+
+  .wire__hero {
+    display: grid;
+    gap: 0.4rem;
+    padding: 0.9rem;
+    border-radius: 10px;
+    border: 1px dashed rgb(255 255 255 / 0.22);
+  }
+
+  .wire__hero i {
+    height: 0.55rem;
+    border-radius: 4px;
+    background: rgb(255 255 255 / 0.2);
+  }
+
+  .wire__hero i:nth-child(2) {
+    width: 65%;
+  }
+
+  .wire__hero b {
+    justify-self: start;
+    margin-top: 0.3rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    background: var(--c-accent);
+    color: var(--c-accent-on);
+    font-size: 0.6875rem;
+    font-weight: 600;
+  }
+
+  .wire__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.45rem;
+  }
+
+  .wire__grid i {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    border: 1px dashed rgb(255 255 255 / 0.18);
+  }
+
+  .wire__cursor {
+    position: absolute;
+    left: 30%;
+    top: 58%;
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 16px solid #fff;
+    transform: rotate(-28deg);
+    filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.5));
+  }
+
+  /* build */
+  .commits {
+    display: grid;
+    gap: var(--sp-3);
+    font-size: 0.75rem;
+  }
+
+  .commits li {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    gap: var(--sp-2);
+    color: var(--c-fg-soft);
+  }
+
+  .commits__hash {
+    color: var(--c-fg-muted);
+  }
+
+  .commits__msg {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .commits__deploy {
+    grid-template-columns: auto 1fr !important;
+    padding: 0.45rem 0.6rem;
+    border-radius: 8px;
+    background: var(--c-accent-soft);
+    color: var(--c-accent) !important;
+  }
+
+  /* run */
+  .uptime__label {
+    color: var(--c-fg-muted);
+    font-size: var(--fs-xs);
+    margin-bottom: var(--sp-3);
+  }
+
+  .uptime__bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 3rem;
+  }
+
+  .uptime__bars i {
+    flex: 1;
+    height: calc(var(--h) * 100%);
+    border-radius: 2px;
+    background: var(--c-accent);
+    opacity: 0.85;
+  }
+
+  .uptime__bars i.warn {
+    background: #f5c86b;
+  }
+
+  .uptime__ok {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    margin-top: var(--sp-4);
+    font-size: var(--fs-xs);
+    color: var(--c-fg-soft);
+  }
+
+  .live {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--c-accent);
+    box-shadow: 0 0 0 4px var(--c-accent-soft);
+  }
+</style>
