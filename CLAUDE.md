@@ -35,6 +35,7 @@ Primary conversion goal: **contact / "ajánlatkérés"**. Every section should p
 
 ## Engineering rules
 
+- **Static standalone output (hard rule):** build time may use Node.js and any other tooling (bundlers, SSGs, image/font pipelines, scripts), but the end product MUST be a static, standalone site — plain HTML/CSS/JS/assets in a build output folder that can be served from any static host with no server runtime (no Node/SSR/DB at request time). Anything dynamic (e.g. the contact form) goes through an external endpoint or edge function, never a server bundled with the site.
 - Stack: **not chosen yet** (see Open decisions). Prefer the simplest thing that meets the design: static HTML/CSS/JS or a static-first framework (e.g. Astro) over a heavy SPA. Don't add a framework, UI kit or animation library the design doesn't need.
 - Mobile-first, fluid type/spacing (`clamp()`), tested at 360 / 768 / 1280 / 1920 px. No horizontal scroll.
 - Accessibility: WCAG 2.2 AA — contrast, visible focus, semantic landmarks, keyboard nav, labelled form fields, `prefers-reduced-motion` respected, motion never carries essential info.
@@ -47,20 +48,29 @@ Primary conversion goal: **contact / "ajánlatkérés"**. Every section should p
 
 ## Commands
 
-None yet — no stack chosen. Once scaffolded, document `dev`, `build`, `preview`, `lint` and the deploy command here.
+Stack: **Astro (static output) + GSAP/ScrollTrigger**, fonts via `@fontsource` (Geist, Geist Mono, Caveat), icons from `@phosphor-icons/core`.
+
+- `npm run dev`: local dev server
+- `npm run build`: static site into `dist/` (deploy this folder to any static host)
+- `npm run preview`: serve the built `dist/` locally
+- Contact form: FormSubmit AJAX (`contact.endpoint` in `site.ts`, JSON POST in the background, in-place thank-you panel). `PUBLIC_FORM_ENDPOINT` overrides it at build time. The endpoint uses FormSubmit's random alias (activated), so the target e-mail is not in the page source; if the target address ever changes, re-activate and swap in the new alias. Only FormSubmit's own spam filter and `_honey` run server-side.
+- Deploy: TODO (hosting not chosen yet).
+
+Where things live: all copy in `src/content/site.ts`; tokens in `src/styles/tokens.css`; motion in `src/scripts/motion.ts`; sections in `src/components/`. Design reference: `inspiration/*.mp4` (HackerRank-style: black kinetic-type hero, white panel rising over it, sticky statements, floating UI cards).
 
 ## Open decisions (ask the user, don't guess)
 
-- [ ] Agency name / logo / existing brand colors & fonts (or build identity from scratch?)
-- [ ] Services offered and target clients (SMEs, startups, e-commerce…)
-- [ ] Tone: tegező vs. magázó; playful vs. serious
-- [ ] Reference sites the user likes / dislikes
-- [ ] Stack & hosting (static host, Cloudflare Pages, Netlify, own server…)
-- [ ] Contact form backend / email service
+- [ ] Agency name / logo / existing brand colors & fonts. Working name „Verzió” + mint `#2ee6a6` accent and a text wordmark are placeholders.
+- [x] Services: website development, custom software, IT services (target clients still to be refined)
+- [x] Tone: tegező, informal-professional
+- [x] Reference: `inspiration/` video (dark, motion-led, white panel transition)
+- [x] Stack: Astro + GSAP. Hosting still open.
+- [x] Contact form backend: FormSubmit (activated, alias in use)
 - [ ] Real case studies, team photos and testimonials available?
 - [ ] English version later? (If yes, plan i18n routing now: `/` = hu, `/en/`.)
 
 ## Housekeeping
 
-- Not a git repo yet. When initialised, commit `.claude/settings.json`, `.claude/skills/` and `skills-lock.json` so the design toolkit is reproducible.
+- Placeholder content to replace before launch is marked `TODO` / `sample: true` in `site.ts` and rendered with a dashed „Minta” tag. Photos in `src/assets/img/` are Unsplash (via picsum) stand-ins: `folyamat.jpg` by Alejandro Escamilla, `munka.jpg` by Rayi Christian Wicaksono.
+- Commit `.claude/settings.json`, `.claude/skills/` and `skills-lock.json` so the design toolkit is reproducible.
 - Plugin set is declared in `.claude/settings.json` (`impeccable@impeccable`, `ui-ux-pro-max@ui-ux-pro-max-skill`). Taste-skill is vendored via `npx skills add https://github.com/Leonxlnx/taste-skill` (pinned in `skills-lock.json`); update the same way.
