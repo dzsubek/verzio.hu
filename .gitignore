@@ -5,3 +5,6 @@ dist/
 .astro/
 .env
 .env.*
+
+# Design reference material (not part of the site)
+inspiration/
